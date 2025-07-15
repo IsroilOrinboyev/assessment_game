@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="text-center mb-5 animate-glow">
+  <h1 class="fw-bold display-4">🏆 {{ group.name }} Results</h1>
+  <p class="lead">Celebrating all your amazing scores! 🌟 Check out the final leaderboard below.</p>
+</div>
+
+<div class="row justify-content-center g-4">
+  {% for person in people %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="glass-card rank-card animate-fade text-center position-relative p-4">
+        {% if person.rank == 1 %}
+          <div class="crown fs-1">👑</div>
+        {% endif %}
+        <h2 class="fw-bold mb-2 text-gradient">{{ person.rank }}. {{ person.nickname }}</h2>
+        <p class="mb-1 fs-4">Total: <strong>{{ person.total_score_display }}</strong></p>
+        <p class="mb-3 fs-5">Average: <strong>{{ person.average_score_display }}</strong></p>
+        <div class="progress" style="height: 25px;">
+          <div class="progress-bar bg-success" role="progressbar"
+               style="width: {{ person.average_score_display|floatformat:0 }}0%;"
+               aria-valuenow="{{ person.average_score_display }}" aria-valuemin="0" aria-valuemax="10">
+            {{ person.average_score_display }}/10
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-center fs-4 mt-4">No scores yet! 🤔 Start assessments to see results.</p>
+  {% endfor %}
+</div>
+
+<div class="text-center mt-5">
+  <a href="{% url 'core:group_detail' group.id %}" class="btn btn-secondary rounded-pill px-5 py-3 fw-bold fs-5">← Back to Group</a>
+  <a href="{% url 'core:group_list' %}" class="btn btn-primary rounded-pill px-5 py-3 fw-bold fs-5">🏡 All Groups</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+  confetti({
+    particleCount: 250,
+    spread: 100,
+    origin: { y: 0.6 }
+  });
+</script>
+{% endblock %}

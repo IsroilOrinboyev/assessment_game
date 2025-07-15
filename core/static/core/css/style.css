@@ -1,0 +1,377 @@
+/* =========================
+   Global Setup
+========================= */
+
+
+body {
+  background: linear-gradient(135deg, #072d5e, #3e7695);
+  font-family: 'Outfit', sans-serif;
+  color: #f1f1f1;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 1s ease;
+  padding: 0 10px;
+}
+
+h1, h2, h3, h4, h5 {
+  line-height: 1.3;
+}
+
+
+/* Navbar glass style */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background 0.4s ease;
+}
+
+.glass-nav:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Footer glass style */
+.glass-footer {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  transition: background 0.4s ease;
+}
+
+.glass-footer:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.glass-footer a {
+  background: linear-gradient(45deg, #00ffcc, #00bfff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.glass-footer a:hover {
+  text-shadow: 0 0 10px #00ffcc, 0 0 20px #00bfff;
+  transform: scale(1.05);
+}
+
+/* Layout to stick footer at bottom */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.glass-footer {
+  flex-shrink: 0;
+}
+
+
+/* =========================
+   Card Layout (Mobile-first)
+========================= */
+.glass-card, .member-card, .rank-card, .group-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  border-radius: 25px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  width: 100%;
+}
+
+.glass-card:hover, .member-card:hover, .rank-card:hover, .group-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+@media (min-width: 768px) {
+  .glass-card, .member-card, .rank-card, .group-card {
+    width: 100%;
+  }
+  .col-md-6, .col-lg-4 {
+    flex: 0 0 auto;
+  }
+}
+
+/* =========================
+   Text & Headings
+========================= */
+h1, .display-5, .display-4 {
+  font-size: 2.5rem;
+}
+
+@media (max-width: 576px) {
+  h1, .display-5, .display-4 {
+    font-size: 2.2rem;
+  }
+}
+
+p, .lead {
+  font-size: 1.3rem;
+}
+
+@media (max-width: 576px) {
+  p, .lead {
+    font-size: 1.4rem;
+  }
+}
+
+/* =========================
+   Buttons
+========================= */
+.btn, .glow-btn {
+  padding: 18px 30px;
+  font-size: 1.3rem;
+  border-radius: 50px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.glow-btn {
+  background: linear-gradient(135deg, #00ffcc, #00bfff);
+  color: #000;
+  box-shadow: 0 0 15px #00ffcc;
+}
+
+.glow-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #00ffcc, 0 0 45px #00bfff;
+}
+
+@media (max-width: 576px) {
+  .btn, .glow-btn {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.4rem;
+  }
+}
+
+/* Score Buttons */
+.score-btn-container .score-radio {
+  display: none;
+}
+
+.score-btn-container .score-btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-btn-container .score-btn:hover {
+  background: linear-gradient(135deg, #ffde59, #ff914d);
+  color: #000;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px #ffde59;
+}
+
+.score-btn-container .score-radio:checked + .score-btn {
+  background: linear-gradient(135deg, #00ffcc, #00bfff);
+  color: #000;
+  box-shadow: 0 0 25px #00ffcc;
+  transform: scale(1.15);
+}
+
+@media (max-width: 768px) {
+  .score-btn-container .score-btn {
+    width: 80px;
+    height: 80px;
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .score-btn-container .score-btn {
+    width: 90px;
+    height: 90px;
+    font-size: 1.8rem;
+  }
+}
+
+/* =========================
+   Modals
+========================= */
+.modal-content {
+  width: 95%;
+  margin: auto;
+}
+
+/* =========================
+   Progress & Badges
+========================= */
+.progress {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+  height: 24px;
+}
+
+.progress-bar {
+  font-weight: bold;
+  background: linear-gradient(135deg, #ffde59, #ff914d);
+  transition: width 1s ease-in-out;
+}
+
+.badge-label {
+  background: linear-gradient(135deg, #00ffcc, #00bfff);
+  color: #000;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  animation: glowPulse 2s infinite alternate;
+}
+
+.rank-number {
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  background: linear-gradient(135deg, #ffde59, #ff914d);
+  color: #000;
+  font-weight: bold;
+  padding: 10px 14px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #ffde59;
+}
+
+.crown {
+  font-size: 2.5rem;
+  animation: crown-bounce 1.5s infinite alternate;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes crown-bounce {
+  from { transform: translateX(-50%) translateY(0); }
+  to { transform: translateX(-50%) translateY(-6px); }
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc; }
+  50% { box-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc; }
+  100% { box-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc; }
+}
+
+/* =========================
+   Text Gradient
+========================= */
+.text-gradient {
+  background: linear-gradient(45deg, #ffde59, #ff914d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* =========================
+   Forms
+========================= */
+form input.form-control.rounded-pill,
+form select.form-control.rounded-pill,
+form textarea.form-control.rounded-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+  border-radius: 50px;
+  text-align: center;
+  padding: 14px 22px;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+}
+
+form input.form-control.rounded-pill:focus,
+form select.form-control.rounded-pill:focus,
+form textarea.form-control.rounded-pill:focus {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 15px #00ffcc;
+  color: #fff;
+}
+
+
+
+
+
+/* Progress bar bigger text and smoother transition */
+.progress-bar {
+  font-size: 1rem;
+  font-weight: bold;
+  transition: width 1s ease-in-out;
+}
+
+/* Mobile-first card adjustments */
+@media (max-width: 768px) {
+  .rank-card {
+    padding: 25px;
+  }
+  .rank-card h2 {
+    font-size: 1.7rem;
+  }
+  .rank-card p {
+    font-size: 1.3rem;
+  }
+  .progress {
+    height: 30px;
+  }
+}
+
+/* Animate glow pulse for top crown */
+@keyframes crown-bounce {
+  from { transform: translateX(-50%) translateY(0); }
+  to { transform: translateX(-50%) translateY(-6px); }
+}
+.crown {
+  animation: crown-bounce 1.5s infinite alternate;
+}
+
+
+
+/* Make the example text a bit playful */
+.form-text {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Add a gentle bounce to the button on hover */
+.animate-bounce:hover {
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Preview card text gradient */
+.text-gradient {
+  background: linear-gradient(45deg, #ffde59, #ff914d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Preview card subtle glow */
+.preview-card {
+  animation: glowPulse 2s infinite alternate;
+}
+
+@keyframes glowPulse {
+  from { box-shadow: 0 0 10px rgba(255, 223, 89, 0.5), 0 0 20px rgba(255, 145, 77, 0.5); }
+  to { box-shadow: 0 0 25px rgba(255, 223, 89, 0.8), 0 0 45px rgba(255, 145, 77, 0.8); }
+}

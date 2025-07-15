@@ -1,0 +1,148 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="text-center mb-5">
+  <h1 class="fw-bold display-5 animate-glow">🏰 {{ group.name }}</h1>
+  <p class="lead">Manage your group, view members, and let each member start assessing others! 💥</p>
+
+  <a href="{% url 'core:add_member' group.id %}" class="btn btn-primary rounded-pill glow-btn mt-3 px-4 py-2 fw-bold fs-5">+ Add Member</a>
+  <a href="{% url 'core:add_question' %}" class="btn btn-warning rounded-pill glow-btn mt-2 px-4 py-2 fw-bold fs-5">✨ Add Question</a>
+</div>
+
+<div class="row g-4 justify-content-center">
+  {% for person in people %}
+    <div class="col-12 col-md-6 col-lg-4"> <!-- updated column classes -->
+      <div class="glass-card member-card animate-fade text-center position-relative">
+        <div class="badge-label position-absolute top-0 start-50 translate-middle-x px-3 py-1 fw-bold">
+          ⭐ Rank: {{ person.rank_in_group }}
+        </div>
+        <h3 class="fw-bold mb-2">{{ person.nickname }}</h3>
+        <p class="mb-1">Total Score: <strong>{{ person.total_score }}</strong></p>
+        <p class="mb-2">Average Score: <strong>{{ person.average_score|floatformat:1 }}</strong></p>
+
+        {% if person.finished_assessing %}
+          <span class="badge bg-success rounded-pill mt-2">✅ Finished</span>
+        {% else %}
+          <a href="{% url 'core:assessment_page' group.id person.id first_question.id %}"
+             class="btn btn-success rounded-pill glow-btn mt-2 px-3 py-2 fw-bold">
+            🎮 Start Assessing
+          </a>
+        {% endif %}
+
+        <button type="button" class="btn btn-outline-warning btn-sm mt-2 edit-btn" data-member-id="{{ person.id }}" data-nickname="{{ person.nickname }}">
+          ✏️ Edit
+        </button>
+        <button type="button" class="btn btn-outline-danger btn-sm mt-2 delete-btn" data-member-id="{{ person.id }}">
+          🗑️ Delete
+        </button>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-center fs-4 mt-4">No members yet. Add some to get started! ✨</p>
+  {% endfor %}
+</div>
+
+<div class="text-center mt-5">
+  <a href="{% url 'core:group_results' group.id %}" class="btn btn-warning rounded-pill glow-btn px-4 py-2 fw-bold fs-5">
+    🏆 View Group Results
+  </a>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editMemberModal" tabindex="-1" aria-labelledby="editMemberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="editMemberForm" method="post">
+      {% csrf_token %}
+      <div class="modal-content glass-card">
+        <div class="modal-header">
+          <h5 class="modal-title text-success">Edit Member</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" name="nickname" id="editNicknameInput" class="form-control rounded-pill text-success fs-3" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success rounded-pill">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Edit button handler
+  document.querySelectorAll(".edit-btn").forEach(function(button) {
+    button.addEventListener("click", function() {
+      const memberId = this.getAttribute("data-member-id");
+      const nickname = this.getAttribute("data-nickname");
+      const groupId = "{{ group.id }}";
+
+      document.getElementById("editNicknameInput").value = nickname;
+      document.getElementById("editMemberForm").action = `/group/${groupId}/member/${memberId}/edit/`;
+      new bootstrap.Modal(document.getElementById("editMemberModal")).show();
+    });
+  });
+
+  // Override edit form submit
+  const editForm = document.getElementById("editMemberForm");
+  editForm.addEventListener("submit", function(e) {
+    e.preventDefault(); // Prevent normal submit
+
+    const url = editForm.action;
+    const formData = new FormData(editForm);
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("editMemberModal"));
+        modal.hide();
+
+        // Refresh page to show updated nickname
+        location.reload();
+      } else {
+        alert(data.error || "Failed to update member.");
+      }
+    })
+    .catch(() => {
+      alert("Something went wrong!");
+    });
+  });
+
+  // Delete button handler
+  document.querySelectorAll(".delete-btn").forEach(function(button) {
+    button.addEventListener("click", function() {
+      if (confirm("Are you sure you want to delete this member? 🚨")) {
+        const memberId = this.getAttribute("data-member-id");
+        const groupId = "{{ group.id }}";
+
+        fetch(`/group/${groupId}/member/${memberId}/delete/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+          }
+        }).then(response => response.json()).then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert("Error deleting member.");
+          }
+        });
+      }
+    });
+  });
+});
+
+</script>
+{% endblock %}

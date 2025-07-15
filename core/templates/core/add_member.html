@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="text-center mb-5">
+  <h1 class="fw-bold display-5 animate-fade">✨ Add a New Member</h1>
+  <p class="lead">Invite someone to join <strong>{{ group.name }}</strong> and prepare for the fun assessment game!</p>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-6">
+    <div class="glass-card p-4 animate-fade">
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="id_nickname" class="form-label fw-bold fs-5">Nickname 🌟</label>
+          {{ form.nickname }}
+        </div>
+        <button type="submit" class="btn btn-success rounded-pill glow-btn px-4 py-2 fw-bold fs-5 w-100">Add Member 🚀</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="text-center mt-4">
+  <a href="{% url 'core:group_detail' group.id %}" class="btn btn-outline-light rounded-pill px-4 py-2">← Back to Group</a>
+</div>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="fw-bold display-5 animate-fade">🌟 Your Groups</h1>
+    <p class="lead">Create and manage your fun assessment squads below.</p>
+    <a href="{% url 'core:group_create' %}" class="btn btn-primary rounded-pill glow-btn mt-3 px-4 py-2 fw-bold fs-5">+ Create New Group</a>
+    <a href="{% url 'core:simple_mark' %}" class="btn btn-primary rounded-pill glow-btn mt-3 px-4 py-2 fw-bold fs-5">-->For simple version</a>
+</div>
+
+<div class="row g-4 justify-content-center">
+    {% for group in groups %}
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+            <div class="glass-card group-card animate-fade text-center position-relative">
+                <div class="ribbon position-absolute top-0 start-50 translate-middle-x px-3 py-1 fw-bold">
+                    🚀 Active
+                </div>
+                <h3 class="fw-bold m-2">{{ group.name }}</h3>
+                <p class="mb-1 small text-light">Created: {{ group.created_at|date:"M d, Y" }}</p>
+                <p class="mb-3">👥 Members: <span class="fw-bold">{{ group.people.count }}</span></p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'core:group_detail' group.id %}" class="btn btn-success rounded-pill glow-btn fs-5">Enter Group ✨</a>
+                    <button type="button" class="btn btn-outline-primary rounded-pill fs-6 edit-group-btn mt-2"
+                            data-group-id="{{ group.id }}" data-group-name="{{ group.name }}">
+                        ✏️ Edit
+                    </button>
+                    <button type="button" class="btn btn-outline-danger rounded-pill fs-6 delete-group-btn mt-2"
+                            data-group-id="{{ group.id }}">
+                        🗑️ Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-center fs-4 mt-4">No groups yet. 🚧 Create one to get started!</p>
+    {% endfor %}
+</div>
+
+    <!-- Edit Group Modal -->
+<div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="editGroupForm" method="post">
+      {% csrf_token %}
+      <div class="modal-content glass-card">
+        <div class="modal-header">
+          <h5 class="modal-title text-success">Edit Group Name</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" name="name" id="editGroupNameInput" class="form-control rounded-pill text-success fs-3" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success rounded-pill">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Delete handler
+    document.querySelectorAll(".delete-group-btn").forEach(function(button) {
+        button.addEventListener("click", function() {
+            const groupId = this.getAttribute("data-group-id");
+            if (confirm("Are you sure you want to delete this group? 🚨 This cannot be undone.")) {
+                fetch(`/group/${groupId}/delete/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert("Error deleting group!");
+                    }
+                })
+                .catch(() => {
+                    alert("Server error!");
+                });
+            }
+        });
+    });
+
+    // Edit handler
+    document.querySelectorAll(".edit-group-btn").forEach(function(button) {
+        button.addEventListener("click", function() {
+            const groupId = this.getAttribute("data-group-id");
+            const groupName = this.getAttribute("data-group-name");
+
+            document.getElementById("editGroupNameInput").value = groupName;
+            document.getElementById("editGroupForm").action = `/group/${groupId}/edit/`;
+
+            new bootstrap.Modal(document.getElementById("editGroupModal")).show();
+        });
+    });
+
+    // Submit edit form
+    document.getElementById("editGroupForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const form = this;
+        const groupId = form.action.split("/")[2];
+
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert("Error editing group!");
+            }
+        })
+        .catch(() => {
+            alert("Server error!");
+        });
+    });
+});
+</script>
+{% endblock %}

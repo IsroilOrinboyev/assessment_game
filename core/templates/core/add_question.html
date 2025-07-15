@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="container py-5 animate-fade">
+  <div class="glass-card p-4 text-center">
+    <h2 class="mb-2 fw-bold text-gradient">🎨 Create a Fun Question! ✨</h2>
+    <p class="lead mb-4">Spice up your assessments! Type a creative question and watch it come to life below. 💬🌟</p>
+
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ form.text.label_tag }}
+        {{ form.text}}
+        <div class="form-text mt-2 text-light">Example: "Who is the ultimate team motivator?" 🔥🙌</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary rounded-pill px-5 py-3 glow-btn fw-bold fs-5 animate-bounce">
+        Add Question 📝
+      </button>
+    </form>
+
+    <div class="preview-card glass-card mt-4 p-3 d-none" id="questionPreview">
+      <h4 class="fw-bold text-gradient mb-0">💬 <span id="previewText">Your fun question will appear here!</span></h4>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const input = document.querySelector('.question-input');
+  const previewCard = document.getElementById('questionPreview');
+  const previewText = document.getElementById('previewText');
+
+  input.addEventListener('input', function() {
+    const value = input.value.trim();
+    if (value) {
+      previewText.textContent = value;
+      previewCard.classList.remove('d-none');
+    } else {
+      previewText.textContent = 'Your fun question will appear here!';
+      previewCard.classList.add('d-none');
+    }
+  });
+</script>
+{% endblock %}

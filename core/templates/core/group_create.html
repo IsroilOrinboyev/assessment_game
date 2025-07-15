@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+  <div class="d-flex justify-content-center mb-4">
+    <div class="glass-card p-4 shadow-lg" style="max-width: 500px; width: 100%;">
+      <h3 class="fw-bold text-center mb-3">✨ Create a New Group</h3>
+      <p class="text-center text-muted">Give your group a fun and memorable name!</p>
+      
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="groupName" class="form-label">Group Name 🏷️</label>
+          <input type="text" name="name" id="groupName" class="form-control rounded-pill text-center" placeholder="Ex: Party Squad" required>
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary rounded-pill fw-bold py-2">🚀 Create Group</button>
+        </div>
+      </form>
+
+      <div class="text-center mt-3">
+        <a href="{% url 'core:group_list' %}" class="text-decoration-none text-light">⬅️ Back to Groups</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

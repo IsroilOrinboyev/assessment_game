@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load static custom_filters %}
+
+
+{% block content %}
+<div class="text-center mb-5">
+  <h1 class="fw-bold display-5 animate-fade">🌟 Rate Your Friends!</h1>
+  <p class="lead">Hey <strong>{{ assessor.nickname }}</strong>, score each person for:</p>
+</div>
+
+<div class="glass-card p-4 animate-fade">
+  <h3 class="fw-bold text-center mb-4">💬 "{{ question.text }}"</h3>
+
+  <form method="post" id="assessmentForm">
+    {% csrf_token %}
+
+    {% for person in targets %}
+      <div class="person-block mb-4 text-center">
+        <h5 class="fw-bold mb-2">{{ person.nickname }}</h5>
+        <div class="d-flex flex-wrap justify-content-center gap-2 score-btn-container">
+          {% for score in 1|to_list:10 %}
+            <input type="radio" name="score_{{ person.id }}" value="{{ score }}" class="score-radio" id="score_{{ person.id }}_{{ score }}">
+            <label for="score_{{ person.id }}_{{ score }}" class="btn score-btn">{{ score }}</label>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-success rounded-pill glow-btn px-5 py-3 fw-bold fs-5">Submit Scores 🚀</button>
+    </div>
+  </form>
+</div>
+
+<div class="text-center mt-4">
+  <a href="{% url 'core:group_detail' group.id %}" class="btn btn-outline-light rounded-pill px-4 py-2">← Back to Group</a>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const form = document.getElementById('assessmentForm');
+  form.addEventListener('submit', function() {
+    // Show feedback animation
+    document.body.insertAdjacentHTML('beforeend', `
+      <div class="submit-overlay">
+        <h1>✅ Scores Submitted!</h1>
+        <p>Redirecting to next question...</p>
+      </div>
+    `);
+  });
+</script>
+{% endblock %}
